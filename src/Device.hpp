@@ -3,14 +3,14 @@
 #using <PresentationCore.dll>
 #using <WindowsBase.dll>
 
-#include <frida-core.h>
+#include <telco-core.h>
 #include <msclr/gcroot.h>
 
 using namespace System;
 using namespace System::Windows::Media;
 using System::Windows::Threading::Dispatcher;
 
-namespace Frida
+namespace Telco
 {
   ref class Process;
   ref class Session;
@@ -32,7 +32,7 @@ namespace Frida
   public ref class Device
   {
   internal:
-    Device (FridaDevice * handle, Dispatcher ^ dispatcher);
+    Device (TelcoDevice * handle, Dispatcher ^ dispatcher);
   public:
     ~Device ();
   protected:
@@ -59,7 +59,7 @@ namespace Frida
     void OnLost (Object ^ sender, EventArgs ^ e);
 
   private:
-    FridaDevice * handle;
+    TelcoDevice * handle;
     msclr::gcroot<Device ^> * selfHandle;
 
     Dispatcher ^ dispatcher;

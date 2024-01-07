@@ -5,11 +5,11 @@
 
 using System::Windows::Threading::DispatcherPriority;
 
-namespace Frida
+namespace Telco
 {
-  static void OnScriptMessage (FridaScript * script, const gchar * message, GBytes * data, gpointer user_data);
+  static void OnScriptMessage (TelcoScript * script, const gchar * message, GBytes * data, gpointer user_data);
 
-  Script::Script (FridaScript * handle, Dispatcher ^ dispatcher)
+  Script::Script (TelcoScript * handle, Dispatcher ^ dispatcher)
     : handle (handle),
       dispatcher (dispatcher)
   {
@@ -50,7 +50,7 @@ namespace Frida
       throw gcnew ObjectDisposedException ("Script");
 
     GError * error = NULL;
-    frida_script_load_sync (handle, nullptr, &error);
+    telco_script_load_sync (handle, nullptr, &error);
     Marshal::ThrowGErrorIfSet (&error);
   }
 
@@ -61,7 +61,7 @@ namespace Frida
       throw gcnew ObjectDisposedException ("Script");
 
     GError * error = NULL;
-    frida_script_unload_sync (handle, nullptr, &error);
+    telco_script_unload_sync (handle, nullptr, &error);
     Marshal::ThrowGErrorIfSet (&error);
   }
 
@@ -72,7 +72,7 @@ namespace Frida
       throw gcnew ObjectDisposedException ("Script");
 
     GError * error = NULL;
-    frida_script_eternalize_sync (handle, nullptr, &error);
+    telco_script_eternalize_sync (handle, nullptr, &error);
     Marshal::ThrowGErrorIfSet (&error);
   }
 
@@ -90,7 +90,7 @@ namespace Frida
 
     gchar * messageUtf8 = Marshal::ClrStringToUTF8CString (message);
     GBytes * dataBytes = Marshal::ClrByteArrayToBytes (data);
-    frida_script_post (handle, messageUtf8, dataBytes);
+    telco_script_post (handle, messageUtf8, dataBytes);
     g_bytes_unref (dataBytes);
     g_free (messageUtf8);
   }
@@ -108,7 +108,7 @@ namespace Frida
       throw gcnew ObjectDisposedException ("Script");
 
     GError * error = NULL;
-    frida_script_enable_debugger_sync (handle, port, nullptr, &error);
+    telco_script_enable_debugger_sync (handle, port, nullptr, &error);
     Marshal::ThrowGErrorIfSet (&error);
   }
 
@@ -119,7 +119,7 @@ namespace Frida
       throw gcnew ObjectDisposedException ("Script");
 
     GError * error = NULL;
-    frida_script_disable_debugger_sync (handle, nullptr, &error);
+    telco_script_disable_debugger_sync (handle, nullptr, &error);
     Marshal::ThrowGErrorIfSet (&error);
   }
 
@@ -133,7 +133,7 @@ namespace Frida
   }
 
   static void
-  OnScriptMessage (FridaScript * script, const gchar * message, GBytes * data, gpointer user_data)
+  OnScriptMessage (TelcoScript * script, const gchar * message, GBytes * data, gpointer user_data)
   {
     (void) script;
 

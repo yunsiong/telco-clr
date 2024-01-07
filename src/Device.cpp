@@ -7,11 +7,11 @@
 
 using System::Windows::Threading::DispatcherPriority;
 
-namespace Frida
+namespace Telco
 {
-  static void OnDeviceLost (FridaDevice * device, gpointer user_data);
+  static void OnDeviceLost (TelcoDevice * device, gpointer user_data);
 
-  Device::Device (FridaDevice * handle, Dispatcher ^ dispatcher)
+  Device::Device (TelcoDevice * handle, Dispatcher ^ dispatcher)
     : handle (handle),
       dispatcher (dispatcher),
       icon (nullptr)
@@ -53,7 +53,7 @@ namespace Frida
   {
     if (handle == NULL)
       throw gcnew ObjectDisposedException ("Device");
-    return Marshal::UTF8CStringToClrString (frida_device_get_id (handle));
+    return Marshal::UTF8CStringToClrString (telco_device_get_id (handle));
   }
 
   String ^
@@ -61,7 +61,7 @@ namespace Frida
   {
     if (handle == NULL)
       throw gcnew ObjectDisposedException ("Device");
-    return Marshal::UTF8CStringToClrString (frida_device_get_name (handle));
+    return Marshal::UTF8CStringToClrString (telco_device_get_name (handle));
   }
 
   ImageSource ^
@@ -70,7 +70,7 @@ namespace Frida
     if (handle == NULL)
       throw gcnew ObjectDisposedException ("Device");
     if (icon == nullptr)
-      icon = Marshal::IconToClrImageSource (Marshal::VariantToClrObject (frida_device_get_icon (handle)));
+      icon = Marshal::IconToClrImageSource (Marshal::VariantToClrObject (telco_device_get_icon (handle)));
     return icon;
   }
 
@@ -80,13 +80,13 @@ namespace Frida
     if (handle == NULL)
       throw gcnew ObjectDisposedException ("Device");
 
-    switch (frida_device_get_dtype (handle))
+    switch (telco_device_get_dtype (handle))
     {
-      case FRIDA_DEVICE_TYPE_LOCAL:
+      case TELCO_DEVICE_TYPE_LOCAL:
         return DeviceType::Local;
-      case FRIDA_DEVICE_TYPE_REMOTE:
+      case TELCO_DEVICE_TYPE_REMOTE:
         return DeviceType::Remote;
-      case FRIDA_DEVICE_TYPE_USB:
+      case TELCO_DEVICE_TYPE_USB:
         return DeviceType::Usb;
       default:
         g_assert_not_reached ();
@@ -111,27 +111,27 @@ namespace Frida
     if (handle == NULL)
       throw gcnew ObjectDisposedException ("Device");
 
-    FridaProcessQueryOptions * options = frida_process_query_options_new ();
+    TelcoProcessQueryOptions * options = telco_process_query_options_new ();
 
     if (pids != nullptr)
     {
       for each (unsigned int pid in pids)
-        frida_process_query_options_select_pid (options, pid);
+        telco_process_query_options_select_pid (options, pid);
     }
 
-    frida_process_query_options_set_scope (options, static_cast<FridaScope> (scope));
+    telco_process_query_options_set_scope (options, static_cast<TelcoScope> (scope));
 
     GError * error = NULL;
-    FridaProcessList * result = frida_device_enumerate_processes_sync (handle, options, nullptr, &error);
+    TelcoProcessList * result = telco_device_enumerate_processes_sync (handle, options, nullptr, &error);
 
     g_object_unref (options);
 
     Marshal::ThrowGErrorIfSet (&error);
 
-    gint result_length = frida_process_list_size (result);
+    gint result_length = telco_process_list_size (result);
     array<Process ^> ^ processes = gcnew array<Process ^> (result_length);
     for (gint i = 0; i != result_length; i++)
-      processes[i] = gcnew Process (frida_process_list_get (result, i));
+      processes[i] = gcnew Process (telco_process_list_get (result, i));
 
     g_object_unref (result);
 
@@ -146,38 +146,38 @@ namespace Frida
 
     gchar * programUtf8 = Marshal::ClrStringToUTF8CString (program);
 
-    FridaSpawnOptions * options = frida_spawn_options_new ();
+    TelcoSpawnOptions * options = telco_spawn_options_new ();
 
     if (argv != nullptr)
     {
       gchar ** argvVector = Marshal::ClrStringArrayToUTF8CStringVector (argv);
-      frida_spawn_options_set_argv (options, argvVector, g_strv_length (argvVector));
+      telco_spawn_options_set_argv (options, argvVector, g_strv_length (argvVector));
       g_strfreev (argvVector);
     }
 
     if (envp != nullptr)
     {
       gchar ** envpVector = Marshal::ClrStringArrayToUTF8CStringVector (envp);
-      frida_spawn_options_set_envp (options, envpVector, g_strv_length (envpVector));
+      telco_spawn_options_set_envp (options, envpVector, g_strv_length (envpVector));
       g_strfreev (envpVector);
     }
 
     if (env != nullptr)
     {
       gchar ** envVector = Marshal::ClrStringArrayToUTF8CStringVector (env);
-      frida_spawn_options_set_env (options, envVector, g_strv_length (envVector));
+      telco_spawn_options_set_env (options, envVector, g_strv_length (envVector));
       g_strfreev (envVector);
     }
 
     if (cwd != nullptr)
     {
       gchar * cwdUtf8 = Marshal::ClrStringToUTF8CString (cwd);
-      frida_spawn_options_set_cwd (options, cwdUtf8);
+      telco_spawn_options_set_cwd (options, cwdUtf8);
       g_free (cwdUtf8);
     }
 
     GError * error = NULL;
-    guint pid = frida_device_spawn_sync (handle, programUtf8, options, nullptr, &error);
+    guint pid = telco_device_spawn_sync (handle, programUtf8, options, nullptr, &error);
 
     g_object_unref (options);
     g_free (programUtf8);
@@ -194,7 +194,7 @@ namespace Frida
       throw gcnew ObjectDisposedException ("Device");
 
     GError * error = NULL;
-    frida_device_resume_sync (handle, pid, nullptr, &error);
+    telco_device_resume_sync (handle, pid, nullptr, &error);
     Marshal::ThrowGErrorIfSet (&error);
   }
 
@@ -205,7 +205,7 @@ namespace Frida
       throw gcnew ObjectDisposedException ("Device");
 
     GError * error = NULL;
-    FridaSession * session = frida_device_attach_sync (handle, pid, nullptr, nullptr, &error);
+    TelcoSession * session = telco_device_attach_sync (handle, pid, nullptr, nullptr, &error);
     Marshal::ThrowGErrorIfSet (&error);
 
     return gcnew Session (session, dispatcher);
@@ -229,7 +229,7 @@ namespace Frida
   }
 
   static void
-  OnDeviceLost (FridaDevice * device, gpointer user_data)
+  OnDeviceLost (TelcoDevice * device, gpointer user_data)
   {
     (void) device;
 

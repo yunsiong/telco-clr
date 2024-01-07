@@ -2,13 +2,13 @@
 
 #using <WindowsBase.dll>
 
-#include <frida-core.h>
+#include <telco-core.h>
 #include <msclr/gcroot.h>
 
 using namespace System;
 using System::Windows::Threading::Dispatcher;
 
-namespace Frida
+namespace Telco
 {
   ref class ScriptMessageEventArgs;
   public delegate void ScriptMessageHandler (Object ^ sender, ScriptMessageEventArgs ^ e);
@@ -16,7 +16,7 @@ namespace Frida
   public ref class Script
   {
   internal:
-    Script (FridaScript * handle, Dispatcher ^ dispatcher);
+    Script (TelcoScript * handle, Dispatcher ^ dispatcher);
   public:
     ~Script ();
   protected:
@@ -38,7 +38,7 @@ namespace Frida
     void OnMessage (Object ^ sender, ScriptMessageEventArgs ^ e);
 
   private:
-    FridaScript * handle;
+    TelcoScript * handle;
     msclr::gcroot<Script ^> * selfHandle;
 
     Dispatcher ^ dispatcher;

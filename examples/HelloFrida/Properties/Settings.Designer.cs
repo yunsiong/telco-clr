@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace HelloFrida.Properties
+namespace HelloTelco.Properties
 {
 
 

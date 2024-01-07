@@ -13,26 +13,26 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Collections.ObjectModel;
 
-namespace HelloFrida
+namespace HelloTelco
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
-        private Frida.DeviceManager deviceManager;
+        private Telco.DeviceManager deviceManager;
 
-        public ObservableCollection<Frida.Device> Devices { get; private set; }
-        public ObservableCollection<Frida.Process> Processes { get; private set; }
-        private Frida.Session session;
-        private Frida.Script script;
+        public ObservableCollection<Telco.Device> Devices { get; private set; }
+        public ObservableCollection<Telco.Process> Processes { get; private set; }
+        private Telco.Session session;
+        private Telco.Script script;
         private bool scriptLoaded;
 
         public MainWindow()
         {
             InitializeComponent();
-            Devices = new ObservableCollection<Frida.Device>();
-            Processes = new ObservableCollection<Frida.Process>();
+            Devices = new ObservableCollection<Telco.Device>();
+            Processes = new ObservableCollection<Telco.Process>();
             DataContext = this;
             Loaded += new RoutedEventHandler(MainWindow_Loaded);
         }
@@ -57,7 +57,7 @@ namespace HelloFrida
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            deviceManager = new Frida.DeviceManager(Dispatcher);
+            deviceManager = new Telco.DeviceManager(Dispatcher);
             deviceManager.Changed += new EventHandler(deviceManager_Changed);
             RefreshDeviceList();
             RefreshAllowedActions();
@@ -67,7 +67,7 @@ namespace HelloFrida
         {
             var devices = deviceManager.EnumerateDevices();
             debugConsole.Items.Add(String.Format("Got {0} devices", devices.Length));
-            Array.Sort(devices, delegate(Frida.Device a, Frida.Device b)
+            Array.Sort(devices, delegate(Telco.Device a, Telco.Device b)
             {
                 var aHasIcon = a.Icon != null;
                 var bHasIcon = b.Icon != null;
@@ -83,7 +83,7 @@ namespace HelloFrida
 
         private void RefreshProcessList()
         {
-            var device = deviceList.SelectedItem as Frida.Device;
+            var device = deviceList.SelectedItem as Telco.Device;
             if (device == null)
             {
                 Processes.Clear();
@@ -92,8 +92,8 @@ namespace HelloFrida
 
             try
             {
-                var processes = device.EnumerateProcesses(Frida.Scope.Full);
-                Array.Sort(processes, delegate(Frida.Process a, Frida.Process b) {
+                var processes = device.EnumerateProcesses(Telco.Scope.Full);
+                Array.Sort(processes, delegate(Telco.Process a, Telco.Process b) {
                     var aHasIcon = a.Icons.Length != 0;
                     var bHasIcon = b.Icons.Length != 0;
                     if (aHasIcon == bHasIcon)
@@ -136,7 +136,7 @@ namespace HelloFrida
 
         private void spawnButton_Click(object sender, RoutedEventArgs e)
         {
-            var device = deviceList.SelectedItem as Frida.Device;
+            var device = deviceList.SelectedItem as Telco.Device;
             try
             {
                 device.Spawn("C:\\Windows\\notepad.exe", new string[] { "C:\\Windows\\notepad.exe", "C:\\document.txt" }, null, null, null);
@@ -149,7 +149,7 @@ namespace HelloFrida
 
         private void resumeButton_Click(object sender, RoutedEventArgs e)
         {
-            var device = deviceList.SelectedItem as Frida.Device;
+            var device = deviceList.SelectedItem as Telco.Device;
             try
             {
                 device.Resume(1337);
@@ -162,8 +162,8 @@ namespace HelloFrida
 
         private void attachButton_Click(object sender, RoutedEventArgs e)
         {
-            var device = deviceList.SelectedItem as Frida.Device;
-            var process = processList.SelectedItem as Frida.Process;
+            var device = deviceList.SelectedItem as Telco.Device;
+            var process = processList.SelectedItem as Telco.Process;
 
             try
             {
@@ -174,7 +174,7 @@ namespace HelloFrida
                 debugConsole.Items.Add("Attach failed: " + ex.Message);
                 return;
             }
-            session.Detached += new Frida.SessionDetachedHandler(session_Detached);
+            session.Detached += new Telco.SessionDetachedHandler(session_Detached);
             debugConsole.Items.Add("Attached to " + session.Pid);
             RefreshAllowedActions();
         }
@@ -187,7 +187,7 @@ namespace HelloFrida
             RefreshAllowedActions();
         }
 
-        private void session_Detached(object sender, Frida.SessionDetachedEventArgs e)
+        private void session_Detached(object sender, Telco.SessionDetachedEventArgs e)
         {
             if (sender == session)
             {
@@ -226,7 +226,7 @@ namespace HelloFrida
                 debugConsole.Items.Add("CreateScript failed: " + ex.Message);
                 return;
             }
-            script.Message += new Frida.ScriptMessageHandler(script_Message);
+            script.Message += new Telco.ScriptMessageHandler(script_Message);
         }
 
         private void loadScriptButton_Click(object sender, RoutedEventArgs e)
@@ -270,7 +270,7 @@ namespace HelloFrida
             }
         }
 
-        private void script_Message(object sender, Frida.ScriptMessageEventArgs e)
+        private void script_Message(object sender, Telco.ScriptMessageEventArgs e)
         {
             if (sender == script)
             {

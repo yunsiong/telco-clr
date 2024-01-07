@@ -9,7 +9,7 @@ using namespace System::Windows;
 using namespace System::Windows::Media;
 using namespace System::Windows::Media::Imaging;
 
-namespace Frida
+namespace Telco
 {
   String ^
   Marshal::UTF8CStringToClrString (const char * str)

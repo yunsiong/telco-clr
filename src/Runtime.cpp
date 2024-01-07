@@ -1,22 +1,22 @@
 #include "Runtime.hpp"
 
-#include <frida-core.h>
+#include <telco-core.h>
 
-namespace Frida
+namespace Telco
 {
   volatile int Runtime::refCount = 0;
 
   void Runtime::Ref ()
   {
     g_atomic_int_inc (&refCount);
-    frida_init ();
+    telco_init ();
   }
 
   void Runtime::Unref ()
   {
     if (g_atomic_int_dec_and_test (&refCount))
     {
-      frida_deinit ();
+      telco_deinit ();
     }
   }
 

@@ -2,13 +2,13 @@
 
 #using <WindowsBase.dll>
 
-#include <frida-core.h>
+#include <telco-core.h>
 #include <msclr/gcroot.h>
 
 using namespace System;
 using System::Windows::Threading::Dispatcher;
 
-namespace Frida
+namespace Telco
 {
   ref class Device;
 
@@ -29,7 +29,7 @@ namespace Frida
     void OnChanged (Object ^ sender, EventArgs ^ e);
 
   private:
-    FridaDeviceManager * handle;
+    TelcoDeviceManager * handle;
     msclr::gcroot<DeviceManager ^> * selfHandle;
 
     Dispatcher ^ dispatcher;

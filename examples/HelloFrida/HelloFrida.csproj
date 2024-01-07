@@ -8,8 +8,8 @@
     <ProjectGuid>{E5D46666-C658-4084-A0A8-094A201559EE}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>HelloFrida</RootNamespace>
-    <AssemblyName>HelloFrida</AssemblyName>
+    <RootNamespace>HelloTelco</RootNamespace>
+    <AssemblyName>HelloTelco</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
@@ -39,8 +39,8 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Frida">
-      <HintPath>..\..\..\build\frida-windows\Win32-Release\bin\Frida.dll</HintPath>
+    <Reference Include="Telco">
+      <HintPath>..\..\..\build\telco-windows\Win32-Release\bin\Telco.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />

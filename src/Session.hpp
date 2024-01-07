@@ -2,13 +2,13 @@
 
 #using <WindowsBase.dll>
 
-#include <frida-core.h>
+#include <telco-core.h>
 #include <msclr/gcroot.h>
 
 using namespace System;
 using System::Windows::Threading::Dispatcher;
 
-namespace Frida
+namespace Telco
 {
   ref class Script;
   enum class SessionDetachReason;
@@ -18,7 +18,7 @@ namespace Frida
   public ref class Session
   {
   internal:
-    Session (FridaSession * handle, Dispatcher ^ dispatcher);
+    Session (TelcoSession * handle, Dispatcher ^ dispatcher);
   public:
     ~Session ();
   protected:
@@ -37,7 +37,7 @@ namespace Frida
     void OnDetached (Object ^ sender, SessionDetachedEventArgs ^ e);
 
   private:
-    FridaSession * handle;
+    TelcoSession * handle;
     msclr::gcroot<Session ^> * selfHandle;
 
     Dispatcher ^ dispatcher;

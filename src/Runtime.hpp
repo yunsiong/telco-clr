@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Frida
+namespace Telco
 {
   class Runtime
   {

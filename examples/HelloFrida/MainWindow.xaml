@@ -1,7 +1,7 @@
-﻿<Window x:Class="HelloFrida.MainWindow"
+﻿<Window x:Class="HelloTelco.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Hello Frida" Height="580" Width="644">
+        Title="Hello Telco" Height="580" Width="644">
     <Window.Resources>
         <DataTemplate x:Key="DeviceTemplate">
             <StackPanel Orientation="Horizontal">

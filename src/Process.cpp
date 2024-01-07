@@ -3,9 +3,9 @@
 #include "Marshal.hpp"
 #include "Runtime.hpp"
 
-namespace Frida
+namespace Telco
 {
-  Process::Process (FridaProcess * handle)
+  Process::Process (TelcoProcess * handle)
     : handle (handle),
       parameters (nullptr),
       icons (nullptr)
@@ -43,7 +43,7 @@ namespace Frida
   {
     if (handle == NULL)
       throw gcnew ObjectDisposedException ("Process");
-    return frida_process_get_pid (handle);
+    return telco_process_get_pid (handle);
   }
 
   String ^
@@ -51,7 +51,7 @@ namespace Frida
   {
     if (handle == NULL)
       throw gcnew ObjectDisposedException ("Process");
-    return Marshal::UTF8CStringToClrString (frida_process_get_name (handle));
+    return Marshal::UTF8CStringToClrString (telco_process_get_name (handle));
   }
 
   IDictionary<String ^, Object ^> ^
@@ -60,7 +60,7 @@ namespace Frida
     if (handle == NULL)
       throw gcnew ObjectDisposedException ("Process");
     if (parameters == nullptr)
-      parameters = Marshal::ParametersDictToClrDictionary (frida_process_get_parameters (handle));
+      parameters = Marshal::ParametersDictToClrDictionary (telco_process_get_parameters (handle));
     return parameters;
   }
 

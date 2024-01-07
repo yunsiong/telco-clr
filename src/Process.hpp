@@ -3,18 +3,18 @@
 #using <PresentationCore.dll>
 #using <WindowsBase.dll>
 
-#include <frida-core.h>
+#include <telco-core.h>
 
 using namespace System;
 using namespace System::Collections::Generic;
 using namespace System::Windows::Media;
 
-namespace Frida
+namespace Telco
 {
   public ref class Process
   {
   internal:
-    Process (FridaProcess * handle);
+    Process (TelcoProcess * handle);
   public:
     ~Process ();
   protected:
@@ -29,7 +29,7 @@ namespace Frida
     virtual String ^ ToString () override;
 
   private:
-    FridaProcess * handle;
+    TelcoProcess * handle;
 
     IDictionary<String ^, Object ^> ^ parameters;
     array<ImageSource ^> ^ icons;

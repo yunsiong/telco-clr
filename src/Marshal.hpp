@@ -3,9 +3,9 @@
 #using <PresentationCore.dll>
 #using <WindowsBase.dll>
 
-#include <frida-core.h>
+#include <telco-core.h>
 
-namespace Frida
+namespace Telco
 {
   private ref class Marshal
   {

@@ -6,11 +6,11 @@
 
 using System::Windows::Threading::DispatcherPriority;
 
-namespace Frida
+namespace Telco
 {
-  static void OnSessionDetached (FridaSession * session, FridaSessionDetachReason reason, FridaCrash * crash, gpointer user_data);
+  static void OnSessionDetached (TelcoSession * session, TelcoSessionDetachReason reason, TelcoCrash * crash, gpointer user_data);
 
-  Session::Session (FridaSession * handle, Dispatcher ^ dispatcher)
+  Session::Session (TelcoSession * handle, Dispatcher ^ dispatcher)
     : handle (handle),
       dispatcher (dispatcher)
   {
@@ -49,7 +49,7 @@ namespace Frida
   {
     if (handle == NULL)
       throw gcnew ObjectDisposedException ("Session");
-    return frida_session_get_pid (handle);
+    return telco_session_get_pid (handle);
   }
 
   void
@@ -57,7 +57,7 @@ namespace Frida
   {
     if (handle == NULL)
       throw gcnew ObjectDisposedException ("Session");
-    frida_session_detach_sync (handle, nullptr, nullptr);
+    telco_session_detach_sync (handle, nullptr, nullptr);
   }
 
   Script ^
@@ -74,17 +74,17 @@ namespace Frida
 
     gchar * sourceUtf8 = Marshal::ClrStringToUTF8CString (source);
 
-    FridaScriptOptions * options = frida_script_options_new ();
+    TelcoScriptOptions * options = telco_script_options_new ();
 
     if (name != nullptr)
     {
       gchar * nameUtf8 = Marshal::ClrStringToUTF8CString (name);
-      frida_script_options_set_name (options, nameUtf8);
+      telco_script_options_set_name (options, nameUtf8);
       g_free (nameUtf8);
     }
 
     GError * error = NULL;
-    FridaScript * script = frida_session_create_script_sync (handle, sourceUtf8, options, nullptr, &error);
+    TelcoScript * script = telco_session_create_script_sync (handle, sourceUtf8, options, nullptr, &error);
 
     g_object_unref (options);
 
@@ -105,7 +105,7 @@ namespace Frida
   }
 
   static void
-  OnSessionDetached (FridaSession * session, FridaSessionDetachReason reason, FridaCrash * crash, gpointer user_data)
+  OnSessionDetached (TelcoSession * session, TelcoSessionDetachReason reason, TelcoCrash * crash, gpointer user_data)
   {
     (void) session;
 

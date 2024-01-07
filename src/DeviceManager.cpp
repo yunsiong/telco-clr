@@ -6,16 +6,16 @@
 
 using System::Windows::Threading::DispatcherPriority;
 
-namespace Frida
+namespace Telco
 {
-  static void OnDeviceManagerChanged (FridaDeviceManager * manager, gpointer user_data);
+  static void OnDeviceManagerChanged (TelcoDeviceManager * manager, gpointer user_data);
 
   DeviceManager::DeviceManager (Dispatcher ^ dispatcher)
     : dispatcher (dispatcher)
   {
     Runtime::Ref ();
 
-    handle = frida_device_manager_new ();
+    handle = telco_device_manager_new ();
 
     selfHandle = new msclr::gcroot<DeviceManager ^> (this);
     onChangedHandler = gcnew EventHandler (this, &DeviceManager::OnChanged);
@@ -27,7 +27,7 @@ namespace Frida
     if (handle == NULL)
       return;
 
-    frida_device_manager_close_sync (handle, nullptr, nullptr);
+    telco_device_manager_close_sync (handle, nullptr, nullptr);
     g_signal_handlers_disconnect_by_func (handle, OnDeviceManagerChanged, selfHandle);
     delete selfHandle;
     selfHandle = NULL;
@@ -53,13 +53,13 @@ namespace Frida
       throw gcnew ObjectDisposedException ("DeviceManager");
 
     GError * error = NULL;
-    FridaDeviceList * result = frida_device_manager_enumerate_devices_sync (handle, nullptr, &error);
+    TelcoDeviceList * result = telco_device_manager_enumerate_devices_sync (handle, nullptr, &error);
     Marshal::ThrowGErrorIfSet (&error);
 
-    gint result_length = frida_device_list_size (result);
+    gint result_length = telco_device_list_size (result);
     array<Device ^> ^ devices = gcnew array<Device ^> (result_length);
     for (gint i = 0; i != result_length; i++)
-      devices[i] = gcnew Device (frida_device_list_get (result, i), dispatcher);
+      devices[i] = gcnew Device (telco_device_list_get (result, i), dispatcher);
 
     g_object_unref (result);
 
@@ -76,7 +76,7 @@ namespace Frida
   }
 
   static void
-  OnDeviceManagerChanged (FridaDeviceManager * manager, gpointer user_data)
+  OnDeviceManagerChanged (TelcoDeviceManager * manager, gpointer user_data)
   {
     (void) manager;
 
